@@ -1,0 +1,343 @@
+<!DOCTYPE html>
+<html lang="id">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Maafin Aku Ya... 🥺</title>
+    <style>
+      * {
+        margin: 0;
+        padding: 0;
+        box-sizing: border-box;
+      }
+
+      body {
+        font-family: "Comic Sans MS", cursive, sans-serif;
+        background: linear-gradient(
+          135deg,
+          #ffeef8 0%,
+          #ffe0f0 50%,
+          #ffd1e8 100%
+        );
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        overflow: hidden;
+      }
+
+      .container {
+        text-align: center;
+        background: white;
+        padding: 40px;
+        border-radius: 30px;
+        box-shadow: 0 20px 60px rgba(255, 105, 180, 0.3);
+        max-width: 500px;
+        position: relative;
+      }
+
+      .character {
+        font-size: 120px;
+        margin-bottom: 20px;
+        animation: float 3s ease-in-out infinite;
+        transition: all 0.3s ease;
+      }
+
+      @keyframes float {
+        0%,
+        100% {
+          transform: translateY(0px);
+        }
+        50% {
+          transform: translateY(-20px);
+        }
+      }
+
+      .shake {
+        animation: shake 0.5s ease;
+      }
+
+      @keyframes shake {
+        0%,
+        100% {
+          transform: translateX(0);
+        }
+        25% {
+          transform: translateX(-10px) rotate(-5deg);
+        }
+        75% {
+          transform: translateX(10px) rotate(5deg);
+        }
+      }
+
+      h1 {
+        color: #ff69b4;
+        font-size: 32px;
+        margin-bottom: 20px;
+        text-shadow: 2px 2px 4px rgba(255, 105, 180, 0.2);
+      }
+
+      .message {
+        color: #666;
+        font-size: 18px;
+        margin-bottom: 30px;
+        line-height: 1.6;
+      }
+
+      .buttons {
+        display: flex;
+        gap: 20px;
+        justify-content: center;
+        margin-top: 30px;
+      }
+
+      button {
+        font-family: "Comic Sans MS", cursive, sans-serif;
+        font-size: 20px;
+        padding: 15px 40px;
+        border: none;
+        border-radius: 50px;
+        cursor: pointer;
+        transition: all 0.3s ease;
+        font-weight: bold;
+        box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+      }
+
+      #yesBtn {
+        background: linear-gradient(135deg, #ff69b4, #ff1493);
+        color: white;
+        transform: scale(1);
+      }
+
+      #yesBtn:hover {
+        transform: scale(1.1);
+        box-shadow: 0 8px 25px rgba(255, 105, 180, 0.4);
+      }
+
+      #noBtn {
+        background: linear-gradient(135deg, #ddd, #bbb);
+        color: #666;
+        position: relative;
+      }
+
+      #noBtn:hover {
+        background: linear-gradient(135deg, #ccc, #aaa);
+      }
+
+      .success-screen {
+        display: none;
+        animation: fadeIn 0.5s ease;
+      }
+
+      @keyframes fadeIn {
+        from {
+          opacity: 0;
+          transform: scale(0.8);
+        }
+        to {
+          opacity: 1;
+          transform: scale(1);
+        }
+      }
+
+      .hearts {
+        position: absolute;
+        width: 100%;
+        height: 100%;
+        pointer-events: none;
+      }
+
+      .heart {
+        position: absolute;
+        font-size: 30px;
+        animation: floatHeart 3s ease-in forwards;
+        opacity: 0;
+      }
+
+      @keyframes floatHeart {
+        0% {
+          opacity: 1;
+          transform: translateY(0) rotate(0deg);
+        }
+        100% {
+          opacity: 0;
+          transform: translateY(-300px) rotate(360deg);
+        }
+      }
+
+      .counter {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background: #ff69b4;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 20px;
+        font-size: 14px;
+        font-weight: bold;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="hearts" id="hearts"></div>
+
+    <div class="container">
+      <div class="counter" id="counter">Penolakan: 0</div>
+
+      <div id="mainScreen">
+        <div class="character" id="character">😢</div>
+        <h1 id="title">Maafin Aku Ya...</h1>
+        <p class="message" id="message">
+          Aku tau aku salah... Aku janji nggak akan ngulangin lagi. Kamu mau
+          maafin aku kan? 🥺
+        </p>
+        <div class="buttons">
+          <button id="yesBtn" onclick="handleYes()">YESS!</button>
+          <button id="noBtn" onclick="handleNo()">no</button>
+        </div>
+      </div>
+
+      <div id="successScreen" class="success-screen">
+        <div class="character">😊</div>
+        <h1>Makasii Yaa Vie!🌹</h1>
+        <p class="message">
+          Jangan marah lagi yaa! Kedepannya aku ga cerita cerita lagi, okeyy?😁
+          Ini Berlebihan ga yaa wkwk...
+        </p>
+      </div>
+    </div>
+
+    <script>
+      let noClickCount = 0;
+      const noBtn = document.getElementById("noBtn");
+      const yesBtn = document.getElementById("yesBtn");
+      const character = document.getElementById("character");
+      const title = document.getElementById("title");
+      const message = document.getElementById("message");
+      const counter = document.getElementById("counter");
+
+      const sadMessages = [
+        {
+          emoji: "😢",
+          title: "Maafin Aku Ya...",
+          text: "Aku ngerti itu buat kamu kesel, aku salah... Janji nggak gitu lagi. Kamu mau maafin kan? 🥺",
+        },
+        {
+          emoji: "😭",
+          title: "Please...",
+          text: "Jangan gitu dong... Aku bener-bener nyesel. Coba klik YES 🥺",
+        },
+        {
+          emoji: "😿",
+          title: "Aku Harus Gimana...",
+          text: "Masa sih kamu nggak mau maafin? Padahal aku udah nyesel banget ni... 💔",
+        },
+        {
+          emoji: "🥺",
+          title: "Ayolah...",
+          text: "Tombol YES nya gede loh, gampang diklik. Coba deh, pasti suka! ✨",
+        },
+        {
+          emoji: "😞",
+          title: "Pwisss...",
+          text: "Aku nggak bisa ga kepikiran kalo kamu belum maafin... Please? 🙏",
+        },
+        {
+          emoji: "💔",
+          title: "Dimaafin yaa...",
+          text: "Jangan klik NO mulu, Coba klik YES... 😭",
+        },
+        {
+          emoji: "😿",
+          title: "Aku Bener-Bener Nyesel",
+          text: "Liat tu... tombol YES nya makin gede. Artinya kamu harus klik! 👉",
+        },
+        {
+          emoji: "🙏",
+          title: "Satu Kesempatan Lagi...",
+          text: "Ini kesempatan terakhir buat aku membuktikan... Klik YES dong! 🙇‍♂️",
+        },
+      ];
+
+      function createHeart(x, y) {
+        const heart = document.createElement("div");
+        heart.className = "heart";
+        heart.textContent = "🌸";
+        heart.style.left = x + "px";
+        heart.style.top = y + "px";
+        document.getElementById("hearts").appendChild(heart);
+
+        setTimeout(() => heart.remove(), 999999999);
+      }
+
+      function handleNo() {
+        noClickCount++;
+        counter.textContent = `Penolakan: ${noClickCount}`;
+
+        character.classList.add("shake");
+        setTimeout(() => character.classList.remove("shake"), 500);
+
+        const messageIndex = Math.min(noClickCount - 1, sadMessages.length - 1);
+        const msg = sadMessages[messageIndex];
+
+        character.textContent = msg.emoji;
+        title.textContent = msg.title;
+        message.textContent = msg.text;
+
+        const newYesSize = 1 + noClickCount * 0.15;
+        yesBtn.style.transform = `scale(${newYesSize})`;
+
+        const containerRect = document
+          .querySelector(".container")
+          .getBoundingClientRect();
+        const btnRect = noBtn.getBoundingClientRect();
+
+        const maxX = containerRect.width - btnRect.width - 80;
+        const maxY = containerRect.height - btnRect.height - 80;
+
+        const randomX = Math.random() * maxX;
+        const randomY = Math.random() * maxY;
+
+        noBtn.style.position = "absolute";
+        noBtn.style.left = randomX + "px";
+        noBtn.style.top = randomY + "px";
+
+        if (noClickCount > 3) {
+          noBtn.style.fontSize = Math.max(12, 20 - noClickCount * 2) + "px";
+          noBtn.style.padding =
+            Math.max(5, 15 - noClickCount) +
+            "px " +
+            Math.max(10, 40 - noClickCount * 3) +
+            "px";
+        }
+
+        if (noClickCount > 5) {
+          noBtn.style.opacity = Math.max(0.3, 1 - (noClickCount - 5) * 0.1);
+        }
+      }
+
+      function handleYes() {
+        for (let i = 0; i < 20; i++) {
+          setTimeout(() => {
+            const x = Math.random() * window.innerWidth;
+            const y = Math.random() * window.innerHeight;
+            createHeart(x, y);
+          }, i * 100);
+        }
+
+        document.getElementById("mainScreen").style.display = "none";
+        document.getElementById("successScreen").style.display = "block";
+        counter.style.display = "none";
+
+        const congratsSound = new Audio("./assets/you.mp3");
+        congratsSound.play().catch(() => {});
+      }
+
+      noBtn.addEventListener("mouseover", () => {
+        if (noClickCount > 2) {
+          handleNo();
+        }
+      });
+    </script>
+  </body>
+</html>
